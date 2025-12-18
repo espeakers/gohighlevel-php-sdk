@@ -12,6 +12,41 @@ beforeEach(function () {
     $this->oauth = new OAuth($this->transporter);
 });
 
+it('can refresh oauth token', function () {
+    $clientId = 'client_id';
+    $clientSecret = 'client_secret';
+    $grantType = 'authorization_code';
+    $userType = 'user_type';
+    $refreshToken = 'refresh_token';
+    $params = [];
+
+    $expectedParams = array_merge($params, [
+        'client_id' => $clientId,
+        'client_secret' => $clientSecret,
+        'grant_type' => $grantType,
+        'user_type' => $userType,
+        'refresh_token' => $refreshToken,
+    ]);
+
+    $mockResponseData = ['access_token' => 'token'];
+    $mockApiResponse = $mockResponseData;
+    $mockResponse = Response::from($mockApiResponse);
+
+    $expectedPayload = Payload::custom(Method::POST, ContentType::URL_ENCODE, 'oauth/token', $expectedParams);
+
+    $this->transporter
+        ->shouldReceive('requestObject')
+        ->once()
+        ->with(Mockery::on(function (Payload $payload) use ($expectedPayload) {
+            return $payload == $expectedPayload;
+        }))
+        ->andReturn($mockResponse);
+
+    $result = $this->oauth->refresh($clientId, $clientSecret, $grantType, $userType, $refreshToken);
+
+    expect($result)->toBe($mockResponse);
+});
+
 it('can get oauth token', function () {
     $clientId = 'client_id';
     $clientSecret = 'client_secret';

@@ -10,6 +10,20 @@ namespace MusheAbdulHakim\GoHighLevel\Contracts\Auth;
 interface OAuthContract
 {
     /**
+     * Refreshes the Access Token
+     *
+     * @param string $client_id
+     * @param string $client_secret
+     * @param string $grant_type
+     * @param string $user_type
+     * @param string $refresh_token
+     * @return void
+     *
+     * @see https://highlevel.stoplight.io/docs/integrations/00d0c0ecaa369-get-access-token
+     */
+    public function refresh(string $client_id, string $client_secret, string $grant_type, string $user_type, string $refresh_token);
+
+    /**
      * Get Access Token
      *
      * @param  array<mixed>  $params

@@ -14,6 +14,19 @@ final class OAuth implements OAuthContract
 {
     use Transportable;
 
+    public function refresh(string $client_id, string $client_secret, string $grant_type, string $user_type, string $refresh_token): \MusheAbdulHakim\GoHighLevel\ValueObjects\Transporter\Response
+    {
+        $params = [];
+        $params['client_id'] = $client_id;
+        $params['client_secret'] = $client_secret;
+        $params['grant_type'] = $grant_type;
+        $params['user_type'] = $user_type;
+        $params['refresh_token'] = $refresh_token;
+        $payload = Payload::custom(Method::POST, ContentType::URL_ENCODE, 'oauth/token', $params);
+
+        return $this->transporter->requestObject($payload);
+    }
+
     /**
      * {@inheritDoc}
      */
